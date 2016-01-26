@@ -1,0 +1,53 @@
+// Simple, lightweight queue implementation for ES6
+// Author: Hakan Ozkok
+// GPL (GNU General Public License)
+module.exports = (() => {
+    'use strict';
+    const node = (item) => {
+            return ({
+                item: item,
+                next: undefined
+            });
+        },
+        push = (queueProps, item) => {
+            let new_node = node(item);
+            if (!queueProps.head)
+                queueProps.tail = queueProps.head = new_node;
+            else {
+                queueProps.tail.next = new_node;
+                queueProps.tail = new_node;
+            }
+            queueProps.len += 1;
+            return item;
+        },
+        pop = (queueProps) => {
+            if (!queueProps.head)
+                return undefined;
+            let popped_item = queueProps.head.item;
+            queueProps.head = queueProps.head.next;
+            queueProps.len -= 1;
+            return popped_item;
+        },
+        toString = (queueProps) => {
+            let curr_node = queueProps.head,
+                _str = '';
+            while (curr_node) {
+                _str += curr_node.item + ' -> ';
+                curr_node = curr_node.next;
+            }
+            return _str.replace(/ -> $/, '');
+        };
+    return () => {
+        let self = {
+                head: undefined,
+                tail: undefined,
+                len: 0
+            };
+        return {
+            push: (item) => push(self, item),
+            pop: () => pop(self),
+            len: () => self.len,
+            toString: () => toString(self)
+        };
+    };
+})();
