@@ -29,13 +29,15 @@ module.exports = (() => {
             return popped_item;
         },
         toString = (queueProps) => {
-            let curr_node = queueProps.head,
-                _str = '';
-            while (curr_node) {
-                _str += curr_node.item + ' -> ';
-                curr_node = curr_node.next;
-            }
-            return _str.replace(/ -> $/, '');
+            let items = [];
+            (function tail_call(curr_node) {
+                if (!curr_node) {
+                    return;
+                }
+                items.push(curr_node.item);
+                tail_call(curr_node.next);
+            }(queueProps.head));
+            return items.join(' -> ');
         };
     return () => {
         let self = {
